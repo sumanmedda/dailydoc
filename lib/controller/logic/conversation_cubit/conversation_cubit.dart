@@ -3,7 +3,9 @@ import 'package:dailydoc/controller/repositories/convesation_repository.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class ConversationCubit extends Cubit<ConversationState> {
-  ConversationCubit() : super(ConversationLoadingState());
+  ConversationCubit() : super(ConversationLoadingState()) {
+    fetchConversations();
+  }
 
   ConversationRepository conversationRepository = ConversationRepository();
 

@@ -10,7 +10,7 @@ class ConversationRepository {
   Future fetchConversation() async {
     try {
       Response response = await api.sendReq.get('/');
-      List<dynamic> conversationMaps = response.data;
+      List<dynamic> conversationMaps = response.data['data'];
       if (localDb.get('conversationMaps') == null) {
         return conversationMaps
             .map((conversationMap) =>

@@ -3,7 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'message_state.dart';
 
 class MessageCubit extends Cubit<MessageState> {
-  MessageCubit() : super(MessageLoadingState());
+  MessageCubit() : super(MessageLoadingState()) {
+    fetchMessages();
+  }
 
   MessageRepository messageRepository = MessageRepository();
 
