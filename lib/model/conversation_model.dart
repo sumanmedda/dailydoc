@@ -1,11 +1,23 @@
+import 'package:hive/hive.dart';
+part 'conversation_model.g.dart';
+
+@HiveType(typeId: 1)
 class ConversationModel {
+  @HiveField(0)
   String? sId;
+  @HiveField(1)
   String? title;
+  @HiveField(2)
   List<String>? participants;
+  @HiveField(3)
   String? image;
+  @HiveField(4)
   String? lastMessage;
+  @HiveField(5)
   String? createdAt;
+  @HiveField(6)
   String? updatedAt;
+  @HiveField(7)
   int? iV;
 
   ConversationModel(
@@ -30,15 +42,15 @@ class ConversationModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['title'] = this.title;
-    data['participants'] = this.participants;
-    data['image'] = this.image;
-    data['lastMessage'] = this.lastMessage;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
-    data['__v'] = this.iV;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['title'] = title;
+    data['participants'] = participants;
+    data['image'] = image;
+    data['lastMessage'] = lastMessage;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
+    data['__v'] = iV;
     return data;
   }
 }

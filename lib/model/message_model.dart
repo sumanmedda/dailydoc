@@ -1,11 +1,23 @@
+import 'package:hive/hive.dart';
+part 'message_model.g.dart';
+
+@HiveType(typeId: 2)
 class MessageModel {
+  @HiveField(8)
   String? sId;
+  @HiveField(9)
   String? text;
+  @HiveField(10)
   String? conversation;
+  @HiveField(11)
   String? sender;
+  @HiveField(12)
   String? material;
+  @HiveField(13)
   int? iV;
+  @HiveField(14)
   String? createdAt;
+  @HiveField(15)
   String? updatedAt;
 
   MessageModel(
@@ -30,15 +42,15 @@ class MessageModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['_id'] = this.sId;
-    data['text'] = this.text;
-    data['conversation'] = this.conversation;
-    data['sender'] = this.sender;
-    data['material'] = this.material;
-    data['__v'] = this.iV;
-    data['createdAt'] = this.createdAt;
-    data['updatedAt'] = this.updatedAt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['_id'] = sId;
+    data['text'] = text;
+    data['conversation'] = conversation;
+    data['sender'] = sender;
+    data['material'] = material;
+    data['__v'] = iV;
+    data['createdAt'] = createdAt;
+    data['updatedAt'] = updatedAt;
     return data;
   }
 }
