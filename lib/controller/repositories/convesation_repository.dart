@@ -12,13 +12,11 @@ class ConversationRepository {
       Response response = await api.sendReq.get('/');
       List<dynamic> conversationMaps = response.data;
       if (localDb.get('conversationMaps') == null) {
-        // Add Local Storage Data
-      } else {
         return conversationMaps
             .map((conversationMap) =>
                 ConversationModel.fromJson(conversationMap))
             .toList();
-      }
+      } else {}
     } catch (e) {
       rethrow;
     }

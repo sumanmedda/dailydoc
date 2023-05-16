@@ -1,4 +1,5 @@
 import 'package:dailydoc/controller/logic/conversation_cubit/conversation_cubit.dart';
+import 'package:dailydoc/controller/logic/internet_cubit/internet_cubit.dart';
 import 'package:dailydoc/controller/logic/message_cubit/message_cubit.dart';
 import 'package:dailydoc/model/conversation_model.dart';
 import 'package:dailydoc/model/message_model.dart';
@@ -23,6 +24,9 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider<InternetCubit>(
+          create: (context) => InternetCubit(),
+        ),
         BlocProvider<ConversationCubit>(
           create: (context) => ConversationCubit(),
         ),
@@ -31,6 +35,7 @@ class MyApp extends StatelessWidget {
         ),
       ],
       child: MaterialApp(
+        debugShowCheckedModeBanner: false,
         title: 'Flutter Demo',
         theme: ThemeData(
           primarySwatch: Colors.blue,

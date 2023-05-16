@@ -44,6 +44,8 @@ dependencies:
   #local Database
   hive: ^2.2.3
   hive_flutter: ^1.1.0
+  #to check connectivity
+  connectivity: ^3.0.6
 
 dev_dependencies:
   #local Database
