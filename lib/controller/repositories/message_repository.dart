@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:dailydoc/main.dart';
 import 'package:dio/dio.dart';
 
 import '../../model/message_model.dart';
@@ -19,6 +20,24 @@ class MessageRepository {
         'nextCurser': nextCurser,
       });
       List<dynamic> messageMaps = response.data['data']['messages'];
+
+      List<MessageModel> newMessageMaps = [];
+
+      for (int i = 0; i < messageMaps.length; i++) {
+        newMessageMaps.add(
+          MessageModel(
+            sId: messageMaps[i]['_id'],
+            text: messageMaps[i]['text'],
+            conversation: messageMaps[i]['conversation'],
+            sender: messageMaps[i]['sender'],
+            material: messageMaps[i]['material'],
+            iV: messageMaps[i]['__v'],
+            createdAt: messageMaps[i]['createdAt'],
+            updatedAt: messageMaps[i]['updatedAt'],
+          ),
+        );
+      }
+      box.put('messageMaps', newMessageMaps);
 
       return messageMaps
           .map((messageMap) => MessageModel.fromJson(messageMap))

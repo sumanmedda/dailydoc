@@ -3,6 +3,8 @@ import 'package:dailydoc/controller/logic/conversation_cubit/conversation_cubit.
 import 'package:dailydoc/controller/logic/conversation_cubit/conversation_state.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_cubit.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_state.dart';
+import 'package:dailydoc/controller/logic/message_cubit/message_cubit.dart';
+import 'package:dailydoc/main.dart';
 
 import 'package:dailydoc/model/conversation_model.dart';
 import 'package:dailydoc/view/message.dart';
@@ -71,7 +73,7 @@ class Homepage extends StatelessWidget {
   }
 
   Column conversationListView() {
-    List<ConversationModel> path = localDb.get('conversationMaps');
+    List<ConversationModel> path = box.get('conversationMaps');
     return Column(
       children: [
         Expanded(
@@ -82,7 +84,9 @@ class Homepage extends StatelessWidget {
               itemBuilder: (context, index) {
                 return ListTile(
                   onTap: () {
-                    localDb.put('conversationId', path[index].sId.toString());
+                    box.put('conversationId', path[index].sId.toString());
+                    BlocProvider.of<MessageCubit>(context)
+                        .fetchMessages(path[index].sId.toString(), '');
                     nextPage(
                         context,
                         Message(
