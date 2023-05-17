@@ -9,8 +9,6 @@ import 'package:dailydoc/view/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../controller/logic/message_cubit/message_cubit.dart';
-
 class Homepage extends StatelessWidget {
   const Homepage({super.key});
 
