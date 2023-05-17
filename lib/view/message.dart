@@ -1,25 +1,27 @@
-import 'package:dailydoc/controller/const.dart';
-import 'package:dailydoc/controller/logic/conversation_cubit/conversation_cubit.dart';
-import 'package:dailydoc/controller/logic/conversation_cubit/conversation_state.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_cubit.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_state.dart';
-
-import 'package:dailydoc/model/conversation_model.dart';
-import 'package:dailydoc/view/message.dart';
+import 'package:dailydoc/controller/logic/message_cubit/message_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../controller/logic/message_cubit/message_cubit.dart';
+import '../model/message_model.dart';
 
-class Homepage extends StatelessWidget {
-  const Homepage({super.key});
+class Message extends StatelessWidget {
+  final String conversationId;
+  const Message({super.key, required this.conversationId});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text(conversationId),
+        centerTitle: true,
+      ),
       body: SafeArea(
         child: BlocBuilder<InternetCubit, InternetState>(
           builder: (context, internetState) =>
-              BlocBuilder<ConversationCubit, ConversationState>(
-                  builder: (context, conversationState) {
+              BlocBuilder<MessageCubit, MessageState>(
+                  builder: (context, messageState) {
             // If No Internet
             if (internetState is InternetLostState) {
               return const Center(
@@ -29,43 +31,35 @@ class Homepage extends StatelessWidget {
             // If Internet if Present
             if (internetState is InternetGainedState) {
               // When in loading state
-              if (conversationState is ConversationLoadingState) {
+              if (messageState is MessageLoadingState) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
               }
               // When in loading state is done and its loaded state
-              if (conversationState is ConversationLoadedState) {
+              if (messageState is MessageLoadedState) {
                 return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: conversationState.conversations.length,
+                    itemCount: messageState.messages.length,
                     itemBuilder: (context, index) {
-                      ConversationModel path =
-                          conversationState.conversations[index];
+                      MessageModel path = messageState.messages[index];
 
                       return ListTile(
-                        onTap: () {
-                          nextPage(
-                              context,
-                              Message(
-                                conversationId: path.sId.toString(),
-                              ));
-                        },
+                        onTap: () {},
                         leading: CircleAvatar(
-                          child: path.image!.isEmpty
+                          child: path.material!.isEmpty
                               ? const Icon(Icons.people)
-                              : Image.network(path.image!),
+                              : Image.network(path.material!),
                         ),
-                        title: Text(path.title.toString()),
-                        subtitle: Text(path.lastMessage.toString()),
+                        title: Text(path.conversation.toString()),
+                        subtitle: Text(path.sender.toString()),
                       );
                     });
               }
               // When in there is some error in data
-              if (conversationState is ConversationErrorState) {
+              if (messageState is MessageErrorState) {
                 return Center(
                   child: Text(
-                    conversationState.error.toString(),
+                    messageState.error.toString(),
                     textAlign: TextAlign.center,
                   ),
                 );

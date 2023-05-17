@@ -12,8 +12,8 @@ class MessageCubit extends Cubit<MessageState> {
   void fetchMessages() async {
     try {
       List<dynamic> messages = await messageRepository.fetchMessage(
-        '',
-        '',
+        '63f5c489f32cc275764a7e15',
+        '63f5c6a1388472775c0626cd',
       );
       emit(MessageLoadedState(messages));
     } catch (e) {

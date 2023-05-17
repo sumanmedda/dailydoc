@@ -16,14 +16,12 @@ class MessageRepository {
           await api.sendReq.get('/$conversationId/messages', queryParameters: {
         'nextCurser': nextCurser,
       });
-      List<dynamic> messageMaps = response.data;
+      List<dynamic> messageMaps = response.data['data']['messages'];
       if (localDb.get('messageMaps') == null) {
-        // Add Local Storage Data
-      } else {
         return messageMaps
             .map((messageMap) => MessageModel.fromJson(messageMap))
             .toList();
-      }
+      } else {}
     } catch (e) {
       rethrow;
     }
