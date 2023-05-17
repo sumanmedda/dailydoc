@@ -1,7 +1,9 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../model/message_model.dart';
-import '../const.dart';
+
 import 'api/api.dart';
 
 class MessageRepository {
@@ -17,11 +19,27 @@ class MessageRepository {
         'nextCurser': nextCurser,
       });
       List<dynamic> messageMaps = response.data['data']['messages'];
-      if (localDb.get('messageMaps') == null) {
-        return messageMaps
-            .map((messageMap) => MessageModel.fromJson(messageMap))
-            .toList();
-      } else {}
+
+      return messageMaps
+          .map((messageMap) => MessageModel.fromJson(messageMap))
+          .toList();
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  void sendMessage(
+    String message,
+    String conversationId,
+    String sender,
+  ) async {
+    try {
+      Response response =
+          await api.sendReq.post('/$conversationId/messages', data: {
+        'text': message,
+        'sender': sender,
+      });
+      log('Resp == ${response.data}');
     } catch (e) {
       rethrow;
     }
