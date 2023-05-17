@@ -1,9 +1,9 @@
 import 'package:dailydoc/controller/logic/internet_cubit/internet_cubit.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_state.dart';
 import 'package:dailydoc/controller/logic/message_cubit/message_state.dart';
-import 'package:dailydoc/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../controller/const.dart';
 import '../controller/logic/message_cubit/message_cubit.dart';
 import '../model/message_model.dart';
 
@@ -44,10 +44,20 @@ class Message extends StatelessWidget {
           builder: (context, internetState) =>
               BlocBuilder<MessageCubit, MessageState>(
                   builder: (context, messageState) {
-            List<MessageModel> path = box.get('messageMaps');
+            final scrollController = ScrollController();
+
+            scrollController.addListener(() {
+              if (scrollController.position.atEdge) {
+                if (scrollController.position.pixels != 0) {
+                  bottomHit(context);
+                }
+              }
+            });
+
             // If No Internet
             if (internetState is InternetLostState) {
-              return messageListView(path);
+              List<MessageModel> path = localDb.get('messageMaps') ?? '';
+              return messageListView(path, scrollController);
             }
             // If Internet if Present
             if (internetState is InternetGainedState) {
@@ -59,6 +69,7 @@ class Message extends StatelessWidget {
               }
               // When in loading state is doneW and its loaded state
               if (messageState is MessageLoadedState) {
+                List<MessageModel> path = localDb.get('messageMaps') ?? '';
                 final size = MediaQuery.of(context).size;
                 TextEditingController messageController =
                     TextEditingController();
@@ -69,7 +80,7 @@ class Message extends StatelessWidget {
                       children: [
                         Expanded(
                           flex: 20,
-                          child: messageListView(path),
+                          child: messageListView(path, scrollController),
                         ),
                         Expanded(
                           flex: 1,
@@ -134,41 +145,11 @@ class Message extends StatelessWidget {
     );
   }
 
-  ListView messageListView(List<MessageModel> path) {
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: const BouncingScrollPhysics(),
-        itemCount: path.length,
-        itemBuilder: (context, index) {
-          return Align(
-            alignment: Alignment.centerRight,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
-              child: Container(
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(5),
-                    color: Colors.lightBlue[100],
-                  ),
-                  padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: [
-                      Text(
-                        path[index].text.toString(),
-                      ),
-                      SizedBox(
-                        height: path[index].material == '' ? 0 : 10,
-                      ),
-                      path[index].material == ''
-                          ? const SizedBox.shrink()
-                          : SizedBox(
-                              height: 80,
-                              width: 80,
-                              child: Image.network(path[index].material!)),
-                    ],
-                  )),
-            ),
-          );
-        });
+  void bottomHit(context) {
+    BlocProvider.of<MessageCubit>(context).fetchMessages(
+      conversationId,
+      localDb.get('nextCursor'),
+      false,
+    );
   }
 }

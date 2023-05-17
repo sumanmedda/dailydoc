@@ -3,11 +3,6 @@ import 'package:dailydoc/controller/logic/conversation_cubit/conversation_cubit.
 import 'package:dailydoc/controller/logic/conversation_cubit/conversation_state.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_cubit.dart';
 import 'package:dailydoc/controller/logic/internet_cubit/internet_state.dart';
-import 'package:dailydoc/controller/logic/message_cubit/message_cubit.dart';
-import 'package:dailydoc/main.dart';
-
-import 'package:dailydoc/model/conversation_model.dart';
-import 'package:dailydoc/view/message.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -69,43 +64,6 @@ class Homepage extends StatelessWidget {
           }),
         ),
       ),
-    );
-  }
-
-  Column conversationListView() {
-    List<ConversationModel> path = box.get('conversationMaps');
-    return Column(
-      children: [
-        Expanded(
-          flex: 20,
-          child: ListView.builder(
-              physics: const BouncingScrollPhysics(),
-              itemCount: path.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  onTap: () {
-                    box.put('conversationId', path[index].sId.toString());
-                    BlocProvider.of<MessageCubit>(context)
-                        .fetchMessages(path[index].sId.toString(), '');
-                    nextPage(
-                        context,
-                        Message(
-                            conversationId: path[index].sId.toString(),
-                            conversationTitle: path[index].title.toString(),
-                            participants:
-                                path[index].participants!.length.toString()));
-                  },
-                  leading: CircleAvatar(
-                    child: path[index].image!.isEmpty
-                        ? const Icon(Icons.people)
-                        : Image.network(path[index].image!),
-                  ),
-                  title: Text(path[index].title.toString()),
-                  subtitle: Text(path[index].lastMessage.toString()),
-                );
-              }),
-        ),
-      ],
     );
   }
 }

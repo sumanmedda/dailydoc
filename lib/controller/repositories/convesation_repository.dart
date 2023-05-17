@@ -1,7 +1,7 @@
-import 'package:dailydoc/main.dart';
 import 'package:dailydoc/model/conversation_model.dart';
 import 'package:dio/dio.dart';
 
+import '../const.dart';
 import 'api/api.dart';
 
 class ConversationRepository {
@@ -28,7 +28,7 @@ class ConversationRepository {
           ),
         );
       }
-      box.put('conversationMaps', newConversationMaps);
+      localDb.put('conversationMaps', newConversationMaps);
       return conversationMaps
           .map((conversationMap) => ConversationModel.fromJson(conversationMap))
           .toList();
