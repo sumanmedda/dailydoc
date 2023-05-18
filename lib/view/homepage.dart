@@ -31,7 +31,7 @@ class Homepage extends StatelessWidget {
             if (conversationState is ConversationErrorState) {
               // When internet is not connected
               if (internetState is InternetLostState) {
-                return conversationListView(internetState.conversations);
+                return conversationListView(internetState);
               }
               // When internet is connected
               if (internetState is InternetGainedState) {

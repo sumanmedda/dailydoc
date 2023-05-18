@@ -13,11 +13,8 @@ class InternetGainedState extends InternetState {
 
 class InternetLostState extends InternetState {
   final String error;
-  final List<dynamic> conversations;
-  final List<dynamic> messages;
+
   InternetLostState(
     this.error,
-    this.conversations,
-    this.messages,
   );
 }

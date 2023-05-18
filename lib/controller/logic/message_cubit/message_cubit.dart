@@ -25,7 +25,11 @@ class MessageCubit extends Cubit<MessageState> {
     }
   }
 
-  void sendMessage(message, conversationId, sender) {
-    messageRepository.sendMessage(message, conversationId, sender);
+  sendMessage(message, conversationId, sender) {
+    try {
+      messageRepository.sendMessage(message, conversationId, sender);
+    } catch (e) {
+      return MessageErrorState(e.toString());
+    }
   }
 }

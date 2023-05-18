@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dio/dio.dart';
 
 import '../../main.dart';
@@ -55,10 +53,12 @@ class MessageRepository {
 
       if (firstFetch) {
         box.put('messageMaps', oldMessageMaps);
+        box.put('localList', {conversationId: box.get('messageMaps')});
       } else {
         List<MessageModel> finalMsgList = List.from(box.get('messageMaps'))
           ..addAll(newMessageMaps);
         box.put('messageMaps', finalMsgList);
+        box.put('localList', {conversationId: box.get('messageMaps')});
       }
 
       return messageMaps
@@ -75,13 +75,13 @@ class MessageRepository {
     String sender,
   ) async {
     try {
+      // ignore: unused_local_variable
       Response response =
           await api.sendReq.post('/$conversationId/messages', data: {
         'text': message,
         'sender':
             sender, // taken sender as 1st element of participants from conversation list as new user is not registered so dont have the unique id
       });
-      log('Resp == ${response.data}');
     } catch (e) {
       rethrow;
     }
