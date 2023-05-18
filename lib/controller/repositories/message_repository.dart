@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:dio/dio.dart';
 
 import '../../main.dart';
@@ -51,6 +53,17 @@ class MessageRepository {
               );
       }
 
+      ///
+
+      List<dynamic> convList = List.from(box.get('convList'))
+        ..add(conversationId);
+
+      box.put('convList', convList);
+
+      log('message List === ${box.get('convList')}');
+
+      ///
+
       if (firstFetch) {
         box.put('messageMaps', oldMessageMaps);
         box.put('localList', {conversationId: box.get('messageMaps')});
@@ -58,6 +71,7 @@ class MessageRepository {
         List<MessageModel> finalMsgList = List.from(box.get('messageMaps'))
           ..addAll(newMessageMaps);
         box.put('messageMaps', finalMsgList);
+
         box.put('localList', {conversationId: box.get('messageMaps')});
       }
 

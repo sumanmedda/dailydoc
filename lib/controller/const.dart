@@ -29,6 +29,8 @@ Column messageListView(
   disableTextField,
 ) {
   List<dynamic> path = box.get('messageMaps');
+  Map<dynamic, dynamic> list = box.get('localList');
+  log('Ids1 == ${list}');
   return Column(
     children: [
       // Message List
@@ -128,50 +130,53 @@ Column messageListLostView(
   participants,
   disableTextField,
 ) {
-  Map<String, dynamic> list = box.get('localList');
+  Map<dynamic, dynamic> list = box.get('localList');
+  log('Ids1 == ${list}');
   List<dynamic> path = list.values.first;
+  String path2 = list.keys.first;
 
   return Column(
     children: [
       // Message List
       Expanded(
         flex: 20,
-        child: ListView.builder(
-            controller: scrollController,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: path.length,
-            itemBuilder: (context, index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 10.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.lightBlue[100],
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(
-                            path[index].text.toString(),
-                          ),
-                          SizedBox(
-                            height: path[index].material == '' ? 0 : 10,
-                          ),
-                          path[index].material == ''
-                              ? const SizedBox.shrink()
-                              : SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                  child: Image.network(path[index].material!)),
-                        ],
-                      )),
-                ),
-              );
-            }),
+        child: Text(path2),
+        // ListView.builder(
+        //     controller: scrollController,
+        //     shrinkWrap: true,
+        //     physics: const BouncingScrollPhysics(),
+        //     itemCount: path.length,
+        //     itemBuilder: (context, index) {
+        //       return Align(
+        //         alignment: Alignment.centerRight,
+        //         child: Padding(
+        //           padding: const EdgeInsets.symmetric(
+        //               horizontal: 8.0, vertical: 10.0),
+        //           child: Container(
+        //               decoration: BoxDecoration(
+        //                 borderRadius: BorderRadius.circular(5),
+        //                 color: Colors.lightBlue[100],
+        //               ),
+        //               padding: const EdgeInsets.all(8),
+        //               child: Column(
+        //                 children: [
+        //                   Text(
+        //                     path[index].text.toString(),
+        //                   ),
+        //                   SizedBox(
+        //                     height: path[index].material == '' ? 0 : 10,
+        //                   ),
+        //                   path[index].material == ''
+        //                       ? const SizedBox.shrink()
+        //                       : SizedBox(
+        //                           height: 80,
+        //                           width: 80,
+        //                           child: Image.network(path[index].material!)),
+        //                 ],
+        //               )),
+        //         ),
+        //       );
+        //     }),
       ),
     ],
   );

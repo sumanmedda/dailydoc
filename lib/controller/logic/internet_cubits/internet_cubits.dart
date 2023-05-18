@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'dart:developer';
+
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,16 +22,13 @@ class InternetCubit extends Cubit<InternetState> {
         _connectivity.onConnectivityChanged.listen((result) async {
       if (result == ConnectivityResult.mobile ||
           result == ConnectivityResult.wifi) {
-        log('Conn == $result');
         List<dynamic> conversations =
             await conversationRepository.fetchConversation();
         List<dynamic> messages = await messageRepository.fetchMessage(
             conversationId, nextCurser, true);
-        log('Conn == yes');
+
         emit(InternetGainedState(conversations, messages));
       } else {
-        log('Conn == No');
-
         // List<dynamic> messages = await messageRepository.fetchMessage(
         //     conversationId, nextCurser, false);
 

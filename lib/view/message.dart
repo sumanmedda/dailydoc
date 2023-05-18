@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dailydoc/controller/logic/message_cubit/message_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -73,7 +71,6 @@ class Message extends StatelessWidget {
             // When data is loaded
             if (messageState is MessageLoadedState) {
               if (internetState is InternetLostState) {
-                log('Lost == Yes-$internetState');
                 return SingleChildScrollView(
                   child: SizedBox(
                     height: size.height - 100,
