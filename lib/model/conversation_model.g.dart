@@ -8,7 +8,7 @@ part of 'conversation_model.dart';
 
 class ConversationModelAdapter extends TypeAdapter<ConversationModel> {
   @override
-  final int typeId = 1;
+  final int typeId = 111;
 
   @override
   ConversationModel read(BinaryReader reader) {

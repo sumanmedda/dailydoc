@@ -1,13 +1,13 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive_flutter/hive_flutter.dart';
 
-import '../model/conversation_model.dart';
+import '../main.dart';
+
 import '../model/message_model.dart';
 import '../view/message.dart';
 import 'logic/message_cubit/message_cubit.dart';
-
-var localDb = Hive.box('box');
 
 nextPage(context, page) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => page));
@@ -56,8 +56,13 @@ ListView messageListView(List<MessageModel> path, scrollController) {
       });
 }
 
-Column conversationListView() {
-  List<ConversationModel> path = localDb.get('conversationMaps');
+Column conversationListView(state) {
+  // List<ConversationModel> path = box.get('conversationMaps');
+  // List<dynamic> path = box.get('conversationMaps');
+  List<dynamic> path = state;
+
+  log('State == $path');
+
   return Column(
     children: [
       Expanded(
@@ -68,7 +73,7 @@ Column conversationListView() {
             itemBuilder: (context, index) {
               return ListTile(
                 onTap: () {
-                  localDb.put('conversationId', path[index].sId.toString());
+                  box.put('conversationId', path[index].sId.toString());
                   BlocProvider.of<MessageCubit>(context)
                       .fetchMessages(path[index].sId.toString(), '', true);
                   nextPage(

@@ -1,7 +1,7 @@
 import 'package:hive/hive.dart';
 part 'message_model.g.dart';
 
-@HiveType(typeId: 2)
+@HiveType(typeId: 222)
 class MessageModel {
   @HiveField(8)
   String? sId;

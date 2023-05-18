@@ -2,9 +2,9 @@ import 'dart:developer';
 
 import 'package:dio/dio.dart';
 
+import '../../main.dart';
 import '../../model/message_model.dart';
 
-import '../const.dart';
 import 'api/api.dart';
 
 class MessageRepository {
@@ -21,7 +21,7 @@ class MessageRepository {
         'nextCurser': nextCurser,
       });
       List<dynamic> messageMaps = response.data['data']['messages'];
-      localDb.put('nextCursor', response.data['data']['nextCurser']);
+      box.put('nextCursor', response.data['data']['nextCurser']);
       List<MessageModel>? oldMessageMaps = [];
       List<MessageModel>? newMessageMaps = [];
 
@@ -54,30 +54,16 @@ class MessageRepository {
       }
 
       if (firstFetch) {
-        localDb.put('messageMaps', oldMessageMaps);
+        box.put('messageMaps', oldMessageMaps);
       } else {
-        List<MessageModel> finalMsgList = List.from(localDb.get('messageMaps'))
+        List<MessageModel> finalMsgList = List.from(box.get('messageMaps'))
           ..addAll(newMessageMaps);
-        localDb.put('messageMaps', finalMsgList);
+        box.put('messageMaps', finalMsgList);
       }
-
-      // oldMessageMaps.addAll(localDb.get('messageMaps') ?? '');
-      // newMessageMaps.addAll(localDb.get('messageMaps'));
-      // firstFetch
-      //     ? localDb.put('messageMaps', oldMessageMaps)
-      //     : localDb.put('messageMaps', newMessageMaps);
-
-      log('message as 1${localDb.get('messageMaps')}');
-      log('message as 2$oldMessageMaps');
-      log('message as 3$newMessageMaps');
 
       return messageMaps
           .map((messageMap) => MessageModel.fromJson(messageMap))
           .toList();
-
-      // return messageMaps
-      //     .map((messageMap) => MessageModel.fromJson(messageMap))
-      //     .toList();
     } catch (e) {
       rethrow;
     }
