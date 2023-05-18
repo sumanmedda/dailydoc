@@ -27,17 +27,19 @@ class Homepage extends StatelessWidget {
             if (conversationState is ConversationLoadedState) {
               return conversationListView(conversationState.conversations);
             }
-            // If some error occours
+            // When There is no internet occours
             if (conversationState is ConversationErrorState) {
+              // When internet is not connected
               if (internetState is InternetLostState) {
                 return conversationListView(internetState.conversations);
               }
+              // When internet is connected
               if (internetState is InternetGainedState) {
                 return conversationListView(internetState.conversations);
               }
             }
 
-            // If Something went Wrong
+            // If Something went Wrong / No Data
             return const Center(
               child: Text('No Data Found'),
             );

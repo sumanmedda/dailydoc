@@ -1,11 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../main.dart';
 
-import '../model/message_model.dart';
 import '../view/message.dart';
 import 'logic/message_cubit/message_cubit.dart';
 
@@ -17,7 +14,8 @@ backPage(context) {
   Navigator.pop(context);
 }
 
-ListView messageListView(List<MessageModel> path, scrollController) {
+ListView messageListView(scrollController, state) {
+  List<dynamic> path = state;
   return ListView.builder(
       controller: scrollController,
       shrinkWrap: true,
@@ -57,11 +55,7 @@ ListView messageListView(List<MessageModel> path, scrollController) {
 }
 
 Column conversationListView(state) {
-  // List<ConversationModel> path = box.get('conversationMaps');
-  // List<dynamic> path = box.get('conversationMaps');
   List<dynamic> path = state;
-
-  log('State == $path');
 
   return Column(
     children: [
@@ -79,10 +73,12 @@ Column conversationListView(state) {
                   nextPage(
                       context,
                       Message(
-                          conversationId: path[index].sId.toString(),
-                          conversationTitle: path[index].title.toString(),
-                          participants:
-                              path[index].participants!.length.toString()));
+                        conversationId: path[index].sId.toString(),
+                        conversationTitle: path[index].title.toString(),
+                        participantsLength:
+                            path[index].participants!.length.toString(),
+                        participants: path[index].participants!,
+                      ));
                 },
                 leading: CircleAvatar(
                   child: path[index].image!.isEmpty

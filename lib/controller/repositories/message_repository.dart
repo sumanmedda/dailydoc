@@ -78,7 +78,8 @@ class MessageRepository {
       Response response =
           await api.sendReq.post('/$conversationId/messages', data: {
         'text': message,
-        'sender': sender,
+        'sender':
+            sender, // taken sender as 1st element of participants from conversation list as new user is not registered so dont have the unique id
       });
       log('Resp == ${response.data}');
     } catch (e) {

@@ -2,18 +2,21 @@ import 'package:dailydoc/controller/logic/message_cubit/message_state.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../controller/const.dart';
+import '../controller/logic/internet_cubits/internet_cubits.dart';
+import '../controller/logic/internet_cubits/internet_state.dart';
 import '../controller/logic/message_cubit/message_cubit.dart';
 import '../main.dart';
-import '../model/message_model.dart';
 
 class Message extends StatelessWidget {
   final String conversationId;
   final String conversationTitle;
-  final String participants;
+  final String participantsLength;
+  final List participants;
   const Message({
     super.key,
     required this.conversationId,
     required this.conversationTitle,
+    required this.participantsLength,
     required this.participants,
   });
 
@@ -29,7 +32,7 @@ class Message extends StatelessWidget {
               height: 5,
             ),
             Text(
-              '$participants participants',
+              '$participantsLength participants',
               style: const TextStyle(
                 fontSize: 12,
               ),
@@ -39,89 +42,115 @@ class Message extends StatelessWidget {
         centerTitle: true,
       ),
       body: SafeArea(
-        child: BlocBuilder<MessageCubit, MessageState>(
-            builder: (context, messageState) {
-          final scrollController = ScrollController();
-
-          scrollController.addListener(() {
-            if (scrollController.position.atEdge) {
-              if (scrollController.position.pixels != 0) {
-                bottomHit(context);
-              }
+        child: BlocBuilder<InternetCubit, InternetState>(
+          builder: (context, internetState) =>
+              BlocBuilder<MessageCubit, MessageState>(
+                  builder: (context, messageState) {
+            final scrollController = ScrollController();
+            // Scroll Listner for pagination
+            if (internetState is InternetGainedState) {
+              scrollController.addListener(() {
+                if (scrollController.position.atEdge) {
+                  if (scrollController.position.pixels != 0) {
+                    return bottomHit(context);
+                  }
+                }
+              });
             }
-          });
 
-          // When in loading state is doneW and its loaded state
-          if (messageState is MessageLoadedState) {
-            List<MessageModel> path = box.get('messageMaps') ?? '';
-            final size = MediaQuery.of(context).size;
-            TextEditingController messageController = TextEditingController();
-            return SingleChildScrollView(
-              child: SizedBox(
-                height: size.height - 100,
-                child: Column(
-                  children: [
-                    Expanded(
-                      flex: 20,
-                      child: messageListView(path, scrollController),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            SizedBox(
-                                width: size.width * 0.7,
-                                child: TextField(
-                                  controller: messageController,
-                                  textAlign: TextAlign.start,
-                                  decoration: const InputDecoration(
-                                    hintText: "Send a Message",
-                                  ),
-                                )),
-                            IconButton(
-                              onPressed: () {
-                                BlocProvider.of<MessageCubit>(context)
-                                    .sendMessage(
-                                  messageController.text,
-                                  conversationId,
-                                  path[0].sender,
-                                );
-                                messageController.clear();
-                                ScaffoldMessenger.of(context)
-                                    .showSnackBar(const SnackBar(
-                                  content: Text('Message Sent'),
-                                  backgroundColor: Colors.green,
-                                ));
-                              },
-                              icon: const Icon(Icons.send),
-                            ),
-                          ],
+            // When data is loading
+            if (messageState is MessageLoadingState) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+
+            // When data is loaded
+            if (messageState is MessageLoadedState) {
+              final size = MediaQuery.of(context).size;
+              TextEditingController messageController = TextEditingController();
+              return SingleChildScrollView(
+                child: SizedBox(
+                  height: size.height - 100,
+                  child: Column(
+                    children: [
+                      // Message List
+                      Expanded(
+                        flex: 20,
+                        child: messageListView(
+                            scrollController, messageState.messages),
+                      ),
+                      // Send Button
+                      Expanded(
+                        flex: 1,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              SizedBox(
+                                  width: size.width * 0.7,
+                                  child: TextField(
+                                    controller: messageController,
+                                    textAlign: TextAlign.start,
+                                    decoration: const InputDecoration(
+                                      hintText: "Send a Message",
+                                    ),
+                                  )),
+                              IconButton(
+                                onPressed: () {
+                                  if (messageController.text.isEmpty) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text('Please Enter Something'),
+                                      backgroundColor: Colors.red,
+                                    ));
+                                  } else {
+                                    BlocProvider.of<MessageCubit>(context)
+                                        .sendMessage(
+                                      messageController.text,
+                                      conversationId,
+                                      participants[0],
+                                    );
+                                    messageController.clear();
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(const SnackBar(
+                                      content: Text('Message Sent'),
+                                      backgroundColor: Colors.green,
+                                    ));
+                                  }
+                                },
+                                icon: const Icon(Icons.send),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            );
-          }
-          // When in there is some error in data
-          if (messageState is MessageErrorState) {
-            return Center(
-              child: Text(
-                messageState.error.toString(),
-                textAlign: TextAlign.center,
-              ),
-            );
-          }
+              );
+            }
+            // When There is no internet occours
+            if (messageState is MessageErrorState) {
+              // When internet is not connected
+              if (internetState is InternetLostState) {
+                return messageListView(
+                    scrollController, internetState.messages);
+              }
+              // When internet is connected
+              if (internetState is InternetGainedState) {
+                return messageListView(
+                    scrollController, internetState.messages);
+              }
+            }
 
-          // If Something went Wrong
-          return const Center(
-            child: Text('An Error Occured'),
-          );
-        }),
+            // If Something went Wrong / No Data
+            return const Center(
+              child: Text('An Error Occured'),
+            );
+          }),
+        ),
       ),
     );
   }
