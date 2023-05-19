@@ -20,7 +20,6 @@ class ConversationCubit extends Cubit<ConversationState> {
         List<dynamic> conversations = box.get('conversationMaps');
         emit(ConversationLoadedState(conversations));
       }
-      // List<dynamic> conversations = [];
     } catch (e) {
       emit(ConversationErrorState(e.toString()));
     }

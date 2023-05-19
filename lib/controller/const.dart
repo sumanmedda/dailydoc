@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dailydoc/controller/logic/internet_cubits/internet_cubits.dart';
 import 'package:dailydoc/controller/logic/internet_cubits/internet_state.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +12,8 @@ nextPage(context, page) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => page));
 }
 
-backPage(context) {
-  Navigator.pop(context);
+backPage(context, value) {
+  Navigator.pop(context, value);
 }
 
 Column messageListView(
@@ -27,7 +25,7 @@ Column messageListView(
   participants,
 ) {
   List<dynamic> path = [];
-  log('message ${box.get(conversationId)}');
+
   if (box.get(conversationId) != null) {
     path = box.get(conversationId);
   } else {
@@ -137,7 +135,7 @@ Column messageListLostView(
   participants,
 ) {
   List<dynamic> path = [];
-  log('message ${box.get(conversationId)}');
+
   if (box.get(conversationId) != null) {
     path = box.get(conversationId);
   } else {
@@ -210,28 +208,38 @@ BlocBuilder conversationListView(state) {
                   return ListTile(
                     onTap: () {
                       if (internetState is InternetLostState) {
-                        nextPage(
+                        Navigator.push(
                             context,
-                            Message(
-                              conversationId: path[index].sId.toString(),
-                              conversationTitle: path[index].title.toString(),
-                              participantsLength:
-                                  path[index].participants!.length.toString(),
-                              participants: path[index].participants!,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) => Message(
+                                      conversationId:
+                                          path[index].sId.toString(),
+                                      conversationTitle:
+                                          path[index].title.toString(),
+                                      participantsLength: path[index]
+                                          .participants!
+                                          .length
+                                          .toString(),
+                                      participants: path[index].participants!,
+                                    )));
                       } else {
                         box.put('conversationId', path[index].sId.toString());
                         BlocProvider.of<MessageCubit>(context)
                             .fetchMessages(path[index].sId.toString(), '', '');
-                        nextPage(
+                        Navigator.push(
                             context,
-                            Message(
-                              conversationId: path[index].sId.toString(),
-                              conversationTitle: path[index].title.toString(),
-                              participantsLength:
-                                  path[index].participants!.length.toString(),
-                              participants: path[index].participants!,
-                            ));
+                            MaterialPageRoute(
+                                builder: (context) => Message(
+                                      conversationId:
+                                          path[index].sId.toString(),
+                                      conversationTitle:
+                                          path[index].title.toString(),
+                                      participantsLength: path[index]
+                                          .participants!
+                                          .length
+                                          .toString(),
+                                      participants: path[index].participants!,
+                                    )));
                       }
                     },
                     leading: CircleAvatar(
@@ -263,9 +271,9 @@ BlocBuilder conversationListLostView() {
                 itemCount: path.length,
                 itemBuilder: (context, index) {
                   return ListTile(
-                    onTap: () {
+                    onTap: () async {
                       if (internetState is InternetLostState) {
-                        nextPage(
+                        await nextPage(
                             context,
                             Message(
                               conversationId: path[index].sId.toString(),
@@ -277,7 +285,7 @@ BlocBuilder conversationListLostView() {
                       } else {
                         box.put('conversationId', path[index].sId.toString());
 
-                        nextPage(
+                        await nextPage(
                             context,
                             Message(
                               conversationId: path[index].sId.toString(),
