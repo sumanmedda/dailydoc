@@ -24,11 +24,6 @@ class Message extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-            onPressed: () {
-              backPage(context, 'refresh');
-            },
-            icon: const Icon(Icons.arrow_back_rounded)),
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -59,6 +54,7 @@ class Message extends StatelessWidget {
             if (internetState is InternetGainedState) {
               scrollController.addListener(() {
                 if (scrollController.position.atEdge) {
+                  // when bottom of screen is touched
                   if (scrollController.position.pixels != 0) {
                     return bottomHit(context);
                   }
@@ -108,6 +104,7 @@ class Message extends StatelessWidget {
   }
 
   void bottomHit(context) {
+    // For pagination
     BlocProvider.of<MessageCubit>(context).fetchMessages(
       conversationId,
       box.get('nextCursor'),

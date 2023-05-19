@@ -1,5 +1,6 @@
 abstract class ConversationState {}
 
+// when a conversationcubit event is triggered paticular states are called
 class ConversationLoadingState extends ConversationState {}
 
 class ConversationLoadedState extends ConversationState {

@@ -8,14 +8,17 @@ import '../main.dart';
 import '../view/message.dart';
 import 'logic/message_cubit/message_cubit.dart';
 
+// used for navigating to next page
 nextPage(context, page) {
   Navigator.push(context, MaterialPageRoute(builder: (context) => page));
 }
 
+// used to navigate to previous page
 backPage(context, value) {
   Navigator.pop(context, value);
 }
 
+// this when show local data when internet is connected
 Column messageListView(
   ScrollController scrollController,
   Size size,
@@ -126,6 +129,7 @@ Column messageListView(
   );
 }
 
+// this when show local data when internet is not connected
 Column messageListLostView(
   ScrollController scrollController,
   Size size,
@@ -193,6 +197,7 @@ Column messageListLostView(
   );
 }
 
+// this when show local data when internet is connected
 BlocBuilder conversationListView(state) {
   List<dynamic> path = state;
   return BlocBuilder<InternetCubit, InternetState>(
@@ -258,6 +263,7 @@ BlocBuilder conversationListView(state) {
   );
 }
 
+// this when show local data when internet is not connected
 BlocBuilder conversationListLostView() {
   List<dynamic> path = box.get('conversationMaps');
   return BlocBuilder<InternetCubit, InternetState>(

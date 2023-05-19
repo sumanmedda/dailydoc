@@ -10,13 +10,16 @@ class ConversationRepository {
 
   Future fetchConversation() async {
     try {
-      Response response = await api.sendReq.get('/');
+      Response response = await api.sendReq.get(
+          '/'); // json data fetched from api will be stored in response variable
 
-      List<dynamic> conversationMaps = response.data['data'];
-      List<ConversationModel> newConversationMaps = [];
+      List<dynamic> conversationMaps = response
+          .data['data']; // conversationMaps will store conversation list data
+      List<ConversationModel> localDbConversationMaps =
+          []; // for storing data in local database localDbConversationMaps of type ConversationModel is used.
 
       for (int i = 0; i < conversationMaps.length; i++) {
-        newConversationMaps.add(
+        localDbConversationMaps.add(
           ConversationModel(
             sId: conversationMaps[i]['_id'],
             title: conversationMaps[i]['title'],
@@ -29,7 +32,10 @@ class ConversationRepository {
           ),
         );
       }
-      box.put('conversationMaps', newConversationMaps);
+
+      box.put('conversationMaps',
+          localDbConversationMaps); // data is inserted into local db
+
       return conversationMaps
           .map((conversationMap) => ConversationModel.fromJson(conversationMap))
           .toList();

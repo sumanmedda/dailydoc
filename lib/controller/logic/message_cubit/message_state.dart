@@ -1,5 +1,6 @@
 abstract class MessageState {}
 
+// when a messagecubit event is triggered paticular states are called
 class MessageLoadingState extends MessageState {
   MessageLoadingState();
 }

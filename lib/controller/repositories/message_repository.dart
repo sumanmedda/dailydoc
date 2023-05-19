@@ -24,6 +24,7 @@ class MessageRepository {
       List<MessageModel> newMessageMaps = [];
 
       for (int i = 0; i < messageMaps.length; i++) {
+        // if api is called first time
         firstFetch == ''
             ? oldMessageMaps.add(
                 MessageModel(
@@ -52,11 +53,16 @@ class MessageRepository {
       }
 
       if (firstFetch == '') {
+        // When messages list first time is called
         box.put(conversationId, oldMessageMaps);
       } else {
+        // When messages list second+ time is called
+        // it is usd for pagination
         List<MessageModel> finalMsgList = List.from(box.get(conversationId))
-          ..addAll(newMessageMaps);
-        box.put(conversationId, finalMsgList);
+          ..addAll(
+              newMessageMaps); // finalMsgList will hold the old and new messages
+        box.put(
+            conversationId, finalMsgList); // for storing list in local database
       }
 
       return messageMaps
@@ -67,6 +73,7 @@ class MessageRepository {
     }
   }
 
+  // USed to post data
   void sendMessage(
     String message,
     String conversationId,

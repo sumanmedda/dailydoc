@@ -5,14 +5,17 @@ import '../../../main.dart';
 import 'message_state.dart';
 
 class MessageCubit extends Cubit<MessageState> {
+  // to take the initial values
   var conversationId = box.get('conversationId') ?? '';
   var nextCurser = box.get('nextCurser') ?? '';
   var firstFetch = box.get('firstFetch') ?? '';
 
   MessageCubit() : super(MessageLoadingState()) {
+    // While loading messages list fetchMessages is used for fetching data using fetchConversations function
     fetchMessages(conversationId, nextCurser, firstFetch);
   }
 
+  // messageRepository is used to import the fetchMessage function
   MessageRepository messageRepository = MessageRepository();
 
   void fetchMessages(conversationId, nextCurser, firstFetch) async {
@@ -25,6 +28,7 @@ class MessageCubit extends Cubit<MessageState> {
     }
   }
 
+  // this function is used to post messages
   sendMessage(message, conversationId, sender) {
     try {
       messageRepository.sendMessage(message, conversationId, sender);
