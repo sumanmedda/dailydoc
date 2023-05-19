@@ -6,8 +6,9 @@ A Flutter Chat Application.
 
 Installation Steps: 
     1. git clone git@github.com:sumanmedda/dailydoc_assignment.git
-    2. Write command - flutter pub get 
-    3. connect a device / start emulator and run the app
+    2. flutter pub get 
+    3. connect a device / start emulator 
+    4. run the app
 
 Packages Used : 
     1. flutter_bloc: ^8.1.2 : for state management
