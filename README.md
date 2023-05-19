@@ -1,15 +1,17 @@
-# dailydoc
+# dailydoc_project
 
 A Flutter Chat Application.
 
 ## Getting Started
 
-Installation : 
-    1. Clone the repo from github 
-    2. Write command - flutter pub get 
-    3. connect a device / start emulator and run the app
+- Installation Steps
+    1. Clone the repo: `git clone git@github.com:sumanmedda/dailydoc_project.git`
+    2. Open project in VS Code or any editor
+    3. Fetch the packages: `flutter pub get` 
+    4. connect a device / start emulator 
+    5. run the app
 
-Packages Used : 
+- Packages Used
     1. flutter_bloc: ^8.1.2 : for state management
     2. dio: ^5.1.2 : for making api(http) calls
     3. pretty_dio_logger: ^1.3.1 : for displaying data fetched from api on console log
