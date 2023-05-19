@@ -5,7 +5,7 @@ A Flutter Chat Application.
 ## Getting Started
 
 Installation : 
-    1. Clone the repo from github 
+    1. Clone the repo from github, code : git clone git@github.com:sumanmedda/dailydoc_assignment.git 
     2. Write command - flutter pub get 
     3. connect a device / start emulator and run the app
 
