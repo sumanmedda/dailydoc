@@ -23,55 +23,63 @@ Column messageListView(
   Size size,
   TextEditingController messageController,
   BuildContext context,
-  state,
   conversationId,
   participants,
-  disableTextField,
 ) {
-  List<dynamic> path = box.get('messageMaps');
-  Map<dynamic, dynamic> list = box.get('localList');
-  log('Ids1 == ${list}');
+  List<dynamic> path = [];
+  log('message ${box.get(conversationId)}');
+  if (box.get(conversationId) != null) {
+    path = box.get(conversationId);
+  } else {
+    path = [];
+  }
+
   return Column(
     children: [
       // Message List
       Expanded(
         flex: 20,
-        child: ListView.builder(
-            controller: scrollController,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            itemCount: path.length,
-            itemBuilder: (context, index) {
-              return Align(
-                alignment: Alignment.centerRight,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 8.0, vertical: 10.0),
-                  child: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(5),
-                        color: Colors.lightBlue[100],
-                      ),
-                      padding: const EdgeInsets.all(8),
-                      child: Column(
-                        children: [
-                          Text(
-                            path[index].text.toString(),
+        child: box.get(conversationId) == null
+            ? const Center(
+                child: CircularProgressIndicator(),
+              )
+            : ListView.builder(
+                controller: scrollController,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: path.length,
+                itemBuilder: (context, index) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 10.0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.lightBlue[100],
                           ),
-                          SizedBox(
-                            height: path[index].material == '' ? 0 : 10,
-                          ),
-                          path[index].material == ''
-                              ? const SizedBox.shrink()
-                              : SizedBox(
-                                  height: 80,
-                                  width: 80,
-                                  child: Image.network(path[index].material!)),
-                        ],
-                      )),
-                ),
-              );
-            }),
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                path[index].text.toString(),
+                              ),
+                              SizedBox(
+                                height: path[index].material == '' ? 0 : 10,
+                              ),
+                              path[index].material == ''
+                                  ? const SizedBox.shrink()
+                                  : SizedBox(
+                                      height: 80,
+                                      width: 80,
+                                      child:
+                                          Image.network(path[index].material!)),
+                            ],
+                          )),
+                    ),
+                  );
+                }),
       ),
       // Send Button
       Expanded(
@@ -84,7 +92,6 @@ Column messageListView(
               SizedBox(
                   width: size.width * 0.7,
                   child: TextField(
-                    enabled: disableTextField,
                     controller: messageController,
                     textAlign: TextAlign.start,
                     decoration: const InputDecoration(
@@ -128,55 +135,61 @@ Column messageListLostView(
   BuildContext context,
   conversationId,
   participants,
-  disableTextField,
 ) {
-  Map<dynamic, dynamic> list = box.get('localList');
-  log('Ids1 == ${list}');
-  List<dynamic> path = list.values.first;
-  String path2 = list.keys.first;
+  List<dynamic> path = [];
+  log('message ${box.get(conversationId)}');
+  if (box.get(conversationId) != null) {
+    path = box.get(conversationId);
+  } else {
+    path = [];
+  }
 
   return Column(
     children: [
       // Message List
       Expanded(
         flex: 20,
-        child: Text(path2),
-        // ListView.builder(
-        //     controller: scrollController,
-        //     shrinkWrap: true,
-        //     physics: const BouncingScrollPhysics(),
-        //     itemCount: path.length,
-        //     itemBuilder: (context, index) {
-        //       return Align(
-        //         alignment: Alignment.centerRight,
-        //         child: Padding(
-        //           padding: const EdgeInsets.symmetric(
-        //               horizontal: 8.0, vertical: 10.0),
-        //           child: Container(
-        //               decoration: BoxDecoration(
-        //                 borderRadius: BorderRadius.circular(5),
-        //                 color: Colors.lightBlue[100],
-        //               ),
-        //               padding: const EdgeInsets.all(8),
-        //               child: Column(
-        //                 children: [
-        //                   Text(
-        //                     path[index].text.toString(),
-        //                   ),
-        //                   SizedBox(
-        //                     height: path[index].material == '' ? 0 : 10,
-        //                   ),
-        //                   path[index].material == ''
-        //                       ? const SizedBox.shrink()
-        //                       : SizedBox(
-        //                           height: 80,
-        //                           width: 80,
-        //                           child: Image.network(path[index].material!)),
-        //                 ],
-        //               )),
-        //         ),
-        //       );
-        //     }),
+        child: box.get(conversationId) == null
+            ? const Center(
+                child: Text('No chat found'),
+              )
+            : ListView.builder(
+                controller: scrollController,
+                shrinkWrap: true,
+                physics: const BouncingScrollPhysics(),
+                itemCount: path.length,
+                itemBuilder: (context, index) {
+                  return Align(
+                    alignment: Alignment.centerRight,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 10.0),
+                      child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(5),
+                            color: Colors.lightBlue[100],
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              Text(
+                                path[index].text.toString(),
+                              ),
+                              SizedBox(
+                                height: path[index].material == '' ? 0 : 10,
+                              ),
+                              path[index].material == ''
+                                  ? const SizedBox.shrink()
+                                  : SizedBox(
+                                      height: 80,
+                                      width: 80,
+                                      child:
+                                          Image.network(path[index].material!)),
+                            ],
+                          )),
+                    ),
+                  );
+                }),
       ),
     ],
   );
@@ -208,8 +221,62 @@ BlocBuilder conversationListView(state) {
                             ));
                       } else {
                         box.put('conversationId', path[index].sId.toString());
-                        BlocProvider.of<MessageCubit>(context).fetchMessages(
-                            path[index].sId.toString(), '', true);
+                        BlocProvider.of<MessageCubit>(context)
+                            .fetchMessages(path[index].sId.toString(), '', '');
+                        nextPage(
+                            context,
+                            Message(
+                              conversationId: path[index].sId.toString(),
+                              conversationTitle: path[index].title.toString(),
+                              participantsLength:
+                                  path[index].participants!.length.toString(),
+                              participants: path[index].participants!,
+                            ));
+                      }
+                    },
+                    leading: CircleAvatar(
+                      child: path[index].image!.isEmpty
+                          ? const Icon(Icons.people)
+                          : Image.network(path[index].image!),
+                    ),
+                    title: Text(path[index].title.toString()),
+                    subtitle: Text(path[index].lastMessage.toString()),
+                  );
+                }),
+          ),
+        ],
+      );
+    },
+  );
+}
+
+BlocBuilder conversationListLostView() {
+  List<dynamic> path = box.get('conversationMaps');
+  return BlocBuilder<InternetCubit, InternetState>(
+    builder: (context, internetState) {
+      return Column(
+        children: [
+          Expanded(
+            flex: 20,
+            child: ListView.builder(
+                physics: const BouncingScrollPhysics(),
+                itemCount: path.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    onTap: () {
+                      if (internetState is InternetLostState) {
+                        nextPage(
+                            context,
+                            Message(
+                              conversationId: path[index].sId.toString(),
+                              conversationTitle: path[index].title.toString(),
+                              participantsLength:
+                                  path[index].participants!.length.toString(),
+                              participants: path[index].participants!,
+                            ));
+                      } else {
+                        box.put('conversationId', path[index].sId.toString());
+
                         nextPage(
                             context,
                             Message(

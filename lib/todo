@@ -1,2 +1,0 @@
-in Message cubit send params {conversationid and next cursor}
-on api calls handle local db for both classes

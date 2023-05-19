@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:dailydoc/controller/logic/message_cubit/message_state.dart';
+import 'package:dailydoc/model/message_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../controller/const.dart';
@@ -61,83 +64,41 @@ class Message extends StatelessWidget {
               });
             }
 
-            // When data is loading
-            if (messageState is MessageLoadingState) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-
-            // When data is loaded
-            if (messageState is MessageLoadedState) {
-              if (internetState is InternetLostState) {
-                return SingleChildScrollView(
-                  child: SizedBox(
-                    height: size.height - 100,
-                    child: messageListLostView(
-                      scrollController,
-                      size,
-                      messageController,
-                      context,
-                      conversationId,
-                      participants,
-                      true,
-                    ),
-                  ),
+            // When Internet is connected
+            if (internetState is InternetGainedState) {
+              // When data is loading
+              if (messageState is MessageLoadingState) {
+                return const Center(
+                  child: CircularProgressIndicator(),
                 );
               }
-              if (internetState is InternetGainedState) {
-                return SingleChildScrollView(
-                  child: SizedBox(
-                    height: size.height - 100,
-                    child: messageListView(
-                      scrollController,
-                      size,
-                      messageController,
-                      context,
-                      internetState.messages,
-                      conversationId,
-                      participants,
-                      true,
-                    ),
-                  ),
+
+              // When data is loaded
+              if (messageState is MessageLoadedState) {
+                return messageListView(scrollController, size,
+                    messageController, context, conversationId, participants);
+              }
+
+              //
+              // If Error occurs in fetching messages
+              if (messageState is MessageErrorState) {
+                return Center(
+                  child: Text(messageState.error),
                 );
               }
             }
 
-            // When There is no internet occours
-            if (messageState is MessageErrorState) {
-              // When internet is not connected
-              if (internetState is InternetLostState) {
-                return messageListLostView(
-                  scrollController,
-                  size,
-                  messageController,
-                  context,
-                  conversationId,
-                  participants,
-                  true,
-                );
-              }
-              // When internet is connected
-              if (internetState is InternetGainedState) {
-                return messageListView(
-                  scrollController,
-                  size,
-                  messageController,
-                  context,
-                  internetState.messages,
-                  conversationId,
-                  participants,
-                  true,
-                );
+            // When Internet is not connected
+            if (internetState is InternetLostState) {
+              if (messageState is MessageLoadedState) {
+                return messageListLostView(scrollController, size,
+                    messageController, context, conversationId, participants);
               }
             }
 
-            // If Something went Wrong / No Data
-            return const Center(
-              child: Text('No Data Found'),
-            );
+            // To show local Data
+            return messageListLostView(scrollController, size,
+                messageController, context, conversationId, participants);
           }),
         ),
       ),
@@ -148,7 +109,7 @@ class Message extends StatelessWidget {
     BlocProvider.of<MessageCubit>(context).fetchMessages(
       conversationId,
       box.get('nextCursor'),
-      false,
+      'No',
     );
   }
 }

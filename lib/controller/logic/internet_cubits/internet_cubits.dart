@@ -22,16 +22,8 @@ class InternetCubit extends Cubit<InternetState> {
         _connectivity.onConnectivityChanged.listen((result) async {
       if (result == ConnectivityResult.mobile ||
           result == ConnectivityResult.wifi) {
-        List<dynamic> conversations =
-            await conversationRepository.fetchConversation();
-        List<dynamic> messages = await messageRepository.fetchMessage(
-            conversationId, nextCurser, true);
-
-        emit(InternetGainedState(conversations, messages));
+        emit(InternetGainedState());
       } else {
-        // List<dynamic> messages = await messageRepository.fetchMessage(
-        //     conversationId, nextCurser, false);
-
         emit(InternetLostState('Not Connected To Internet'));
       }
     });
